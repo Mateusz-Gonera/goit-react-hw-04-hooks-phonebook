@@ -5,10 +5,7 @@ import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 
 export const App = () => {
-  const [contacts, setContacts] = useState([]);
-  const [filter, setFilter] = useState('');
-
-  useEffect(() => {
+  const [contacts, setContacts] = useState(() => {
     const json = localStorage.getItem('contacts');
     if (json === null) {
       localStorage.setItem(
@@ -20,6 +17,19 @@ export const App = () => {
           { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
         ])
       );
+      const parseBegin = JSON.parse(localStorage.getItem('contacts'));
+      return parseBegin;
+    } else {
+      const parseContacts = JSON.parse(json);
+      return parseContacts;
+    }
+  });
+  const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    const json = localStorage.getItem('contacts');
+    if (json === null) {
+      localStorage.setItem('contacts', JSON.stringify([]));
     } else {
       const parseContacts = JSON.parse(json);
       setContacts(parseContacts);
@@ -64,6 +74,8 @@ export const App = () => {
     for (const element of contacts) {
       if (contacts.indexOf(element) !== index) {
         setContacts(contacts.filter((contact, idx) => idx !== index));
+      } else {
+        setContacts([]);
       }
     }
   };
